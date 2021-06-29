@@ -11,11 +11,11 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
     noStroke();
     imageMode(CENTER);
-    background_jpg = loadImage("/images/background.jpg");
-    seagull_png = loadImage("/images/seagull.png");
-    mine_png = loadImage("/images/mine.png");
-    surfer_png = loadImage("/images/surfer.png");
-    left_wave_png = loadImage("/images/wave.png");
+    background_jpg = loadImage("images/background.jpg");
+    seagull_png = loadImage("images/seagull.png");
+    mine_png = loadImage("images/mine.png");
+    surfer_png = loadImage("images/surfer.png");
+    left_wave_png = loadImage("images/wave.png");
 
     player = new Surfer("YOU");
 }
