@@ -10,7 +10,7 @@ class Surfer {
     constructor(name) {
         this.name = name;
         this.dirction = "immobile";
-        this.width = 400;
+        this.width = 340;
         this.height = 350;
         this.x = width / 2;
         this.y = height - this.height / 2;
@@ -54,10 +54,10 @@ class Surfer {
 
     collides(mob) {
         return (
-            this.x + this.width / 3 > (mob.x - mob.width / 2) &&
-            this.x - this.width / 3 < (mob.x + mob.width / 2) &&
-            this.y + this.height / 4 > (mob.y - mob.height / 2) &&
-            this.y - this.height / 4 < (mob.y + mob.height / 2)
+            this.x + this.width / 4 > (mob.x - mob.width / 2) &&
+            this.x - this.width / 8 < (mob.x + mob.width / 2) &&
+            this.y + this.height / 3 > (mob.y - mob.height / 2) &&
+            this.y - this.height / 3 < (mob.y + mob.height / 2)
         );
     }
 

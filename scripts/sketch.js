@@ -36,10 +36,12 @@ function draw() {
     /* Set up background & game infos */
     image(background_jpg, width / 2, height / 2, width, height);
     fill(255, 255, 0);
+    textAlign(LEFT);
     text(`Score: ${score}`, 10, 30);
-    text(str(waves.length), width - 10, 30);
-    text(str(seagulls.length), width - 20, 30);
-    text(str(mines.length), width - 30, 30);
+    textAlign(RIGHT);
+    text(`Waves: ${waves.length}`, width, 30);
+    text(`Mines: ${mines.length}`, width, 50);
+    text(`Seagulls: ${seagulls.length}`, width, 70);
 
     rectMode(CORNER);
     fill("#67daef");
@@ -62,7 +64,10 @@ function draw() {
         if (debug) mine.displayHitBox();
         mine.display();
         mine.move();
-        if (player.collides(mine)) loose();
+        if (player.collides(mine)) {
+            loose("mine");
+            return;
+        }
     }
 
     /* Delete seagull out of the screen and draw ones onscreen */
@@ -71,7 +76,10 @@ function draw() {
         if (debug) seagull.displayHitBox();
         seagull.display();
         seagull.move();
-        if (player.collides(seagull)) { loose() };
+        if (player.collides(seagull)) {
+            loose("seagull");
+            return;
+        }
     }
 
     /* Surfer actions */
@@ -88,16 +96,19 @@ function keyPressed() {
     }
 }
 
-loose = () => {
+loose = reason => {
+    noLoop();
     background(0);
     fill(255, 0, 0);
+    textAlign(CENTER)
     text("GAME OVER", width / 2, height / 2);
-    noLoop();
-};
+    text(`Score: ${score}`, width / 2, height - height / 2.5);
+    text(`You died because of a ${reason}`, width / 2, height - height / 3);
+}
 
 win = () => {
+    noLoop();
     background(255);
     fill(255, 255, 0);
     text("YOU WON !", width / 2, height / 2);
-    noLoop();
 }
