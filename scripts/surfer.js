@@ -20,7 +20,6 @@ class Surfer {
         fill(0);
         if (debug) rect(this.x, this.y, this.width / 2, this.height / 1.5);
         image(surfer_png, this.x, this.y, this.width, this.height);
-        text(this.name, this.x, this.y - this.height / 2);
         fill(255, 255, 0);
     }
 
