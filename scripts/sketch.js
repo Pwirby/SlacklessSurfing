@@ -5,23 +5,42 @@ let seagulls = [];
 let seaLevel = 100;
 let score = 0;
 
-let debug = false;
+let debug = 0;
 
-function setup() {
-    createCanvas(windowWidth, windowHeight);
-    noStroke();
-    imageMode(CENTER);
+const borderDeath = [
+    "You drift away...",
+    "You went too far !",
+    "You loose yourself to the sea.",
+];
+const seagullDeath = [
+    "You died, pecked by a seagull !",
+    "You were jabbed by a seagull !",
+    "Seagull uses beak, it's very effective !",
+];
+const mineDeath = [
+    "'KABAM !' Does the mine, as you explode in pieces.",
+    "No no no, you were supposed to dodge the mines !",
+    "Seagull uses beak, it's very effective !",
+];
+
+function preload() {
     background_jpg = loadImage("images/background.jpg");
     seagull_png = loadImage("images/seagull.png");
     mine_png = loadImage("images/mine.png");
     surfer_png = loadImage("images/surfer.png");
     left_wave_png = loadImage("images/wave.png");
+}
 
+function setup() {
+    createCanvas(windowWidth, windowHeight);
+    noStroke();
+    imageMode(CENTER);
+    textSize(20);
     player = new Surfer("YOU");
 }
 
 function draw() {
-    if (waves.length < 5) {
+    if (waves.length < 4) {
         direction = Math.floor(random(2)) ? "left" : "right";
         waves.push(new Wave(direction, random(3, 5)));
     }
@@ -33,16 +52,8 @@ function draw() {
         direction = Math.floor(random(2)) ? "left" : "right";
         seagulls.push(new Seagull(direction, random(3, 5)));
     }
-    /* Set up background & game infos */
+    /* Set up background & sea */
     image(background_jpg, width / 2, height / 2, width, height);
-    fill(255, 255, 0);
-    textAlign(LEFT);
-    text(`Score: ${score}`, 10, 30);
-    textAlign(RIGHT);
-    text(`Waves: ${waves.length}`, width, 30);
-    text(`Mines: ${mines.length}`, width, 50);
-    text(`Seagulls: ${seagulls.length}`, width, 70);
-
     rectMode(CORNER);
     fill("#67daef");
     rect(0, height - seaLevel, width, seaLevel);
@@ -51,7 +62,10 @@ function draw() {
     /* Delete waves out of the screen and draw ones onscreen */
     waves = waves.filter(wave => !wave.outOfScreen());
     for (let wave of waves) {
-        if (debug) wave.displayHitBox();
+        if (debug) {
+            fill("#67daef");
+            wave.displayHitBox();
+        }
         wave.display();
         wave.move();
         player.ride(wave);
@@ -65,7 +79,7 @@ function draw() {
         mine.display();
         mine.move();
         if (player.collides(mine)) {
-            loose("mine");
+            loose(mine);
             return;
         }
     }
@@ -77,7 +91,7 @@ function draw() {
         seagull.display();
         seagull.move();
         if (player.collides(seagull)) {
-            loose("seagull");
+            loose(seagull);
             return;
         }
     }
@@ -88,11 +102,24 @@ function draw() {
 
     if (player.outOfScreen()) loose();
     else if (score >= 50000) win();
+
+    /* Draw the infos */
+    fill(255, 255, 0);
+    textAlign(LEFT);
+    text(`Score: ${score}`, 10, 30);
+    textAlign(RIGHT);
+    text(`Waves: ${waves.length}`, width, 30);
+    text(`Mines: ${mines.length}`, width, 50);
+    text(`Seagulls: ${seagulls.length}`, width, 70);
 }
 
 function keyPressed() {
-    for (let wave of waves) {
-        if (keyCode === UP_ARROW && player.collides(wave)) player.jump();
+    if (keyCode === UP_ARROW) {
+        for (let wave of waves) {
+            if (player.collides(wave)) player.jump();
+        }
+    } else if (keyCode === 32) {
+        debug = (debug + 1) % 2;
     }
 }
 
@@ -101,14 +128,16 @@ loose = reason => {
     background(0);
     fill(255, 0, 0);
     textAlign(CENTER)
+    textSize(40);
     text("GAME OVER", width / 2, height / 2);
+    textSize(20);
     text(`Score: ${score}`, width / 2, height - height / 2.5);
-    text(`You died because of a ${reason}`, width / 2, height - height / 3);
-}
-
-win = () => {
-    noLoop();
-    background(255);
-    fill(255, 255, 0);
-    text("YOU WON !", width / 2, height / 2);
+    if (reason instanceof Seagull) {
+        message = seagullDeath[Math.floor(random(seagullDeath.length))];
+    } else if (reason instanceof Mine) {
+        message = mineDeath[Math.floor(random(mineDeath.length))];
+    } else if (reason === undefined) {
+        message = borderDeath[Math.floor(random(borderDeath.length))];
+    }
+    text(message, width / 2, height - height / 3);
 }
