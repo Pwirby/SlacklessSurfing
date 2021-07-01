@@ -59,6 +59,7 @@ function draw() {
     rect(0, height - seaLevel, width, seaLevel);
 
     rectMode(CENTER);
+
     /* Delete waves out of the screen and draw ones onscreen */
     waves = waves.filter(wave => !wave.outOfScreen());
     for (let wave of waves) {
@@ -70,6 +71,10 @@ function draw() {
         wave.move();
         player.ride(wave);
     }
+
+    /* Surfer actions */
+    player.display();
+    player.move(keyCode);
 
     /* Delete mines out of the screen and draw ones onscreen */
     fill(255, 0, 0);
@@ -96,13 +101,6 @@ function draw() {
         }
     }
 
-    /* Surfer actions */
-    player.display();
-    player.move(keyCode);
-
-    if (player.outOfScreen()) loose();
-    else if (score >= 50000) win();
-
     /* Draw the infos */
     fill(255, 255, 0);
     textAlign(LEFT);
@@ -111,6 +109,9 @@ function draw() {
     text(`Waves: ${waves.length}`, width, 30);
     text(`Mines: ${mines.length}`, width, 50);
     text(`Seagulls: ${seagulls.length}`, width, 70);
+
+    if (player.outOfScreen()) loose();
+    else if (score >= 50000) win();
 }
 
 function keyPressed() {
@@ -120,6 +121,23 @@ function keyPressed() {
         }
     } else if (keyCode === 32) {
         debug = (debug + 1) % 2;
+    }
+}
+
+function touchStarted() {
+    touch = touches[0];
+    console.log(touch);
+}
+
+function touchEnded() {
+    if (touch.x > mouseX) {
+        player.move(LEFT_ARROW);
+    } else if (touch.x < mouseX) {
+        player.move(RIGHT_ARROW);
+    } else {
+        for (let wave of waves) {
+            if (player.collides(wave)) player.jump();
+        }
     }
 }
 
