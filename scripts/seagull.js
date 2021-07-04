@@ -5,7 +5,7 @@ class Seagull extends Mob {
      * @param {Number} speed - The seagull's speed 
      */
     constructor(direction, speed) {
-        super(200, 200, direction, speed);
+        super(height * 0.28, height * 0.28, direction, speed);
         this.y = this.height / 2;
         this.img = seagull_png;
     }

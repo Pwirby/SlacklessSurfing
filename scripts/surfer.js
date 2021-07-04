@@ -6,8 +6,8 @@ class Surfer {
      * Makes the player
      */
     constructor() {
-        this.width = 340;
-        this.height = 350;
+        this.width = height * 0.49;
+        this.height = height * 0.49;
         this.speed = 7;
         this.x = width / 2;
         this.y = height - this.height / 2;

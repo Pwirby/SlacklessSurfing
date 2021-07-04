@@ -5,7 +5,7 @@ class Mine extends Mob {
      * @param {Number} speed - The mine's speed 
      */
     constructor(direction, speed) {
-        super(100, 100, direction, speed);
+        super(height * 0.14, height * 0.14, direction, speed);
         this.y = height - this.height / 2;
         this.img = mine_png;
     }
